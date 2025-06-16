@@ -7,6 +7,15 @@ Defines the Car and Carpark classes used in the Smart Carpark system.
 Handles car entry/exit, bay management, and logging.
 """
 
+# models.py
+# This file defines two classes: Car and Carpark
+
+"""
+models.py
+Defines the Car and Carpark classes used in the Smart Carpark system.
+Handles car entry/exit, bay management, and logging.
+"""
+
 from datetime import datetime
 from pathlib import Path
 import os
@@ -71,7 +80,7 @@ class Carpark:
             print(f"Car with license plate {license_plate} not found.")
 
     def _log_action(self, license_plate, action, timestamp, bay, charge=None):
-        """Stores car activity (entry or exit) in memory before logging to file."""
+        """Stores car activity (entry or exit) in memory and logs cleanly."""
         time_str = timestamp.strftime("%Y-%m-%d %H:%M:%S")
 
         if action == "ENTRY":
@@ -86,34 +95,19 @@ class Carpark:
         self._write_log_table()
 
     def _write_log_table(self):
-        """Writes the structured table log to the log file."""
-        log_file_exists = Path(self.log_file).exists()
-        write_header = (
-            not log_file_exists or Path(self.log_file).stat().st_size == 0
+        """Writes the structured table log to the log file (overwrites every time)."""
+        header = (
+            f"{'ENTRY TIME':<20} | {'EXIT TIME':<20} | "
+            f"{'FEE':<5} | {'BAY':<6} | {'MODEL':<16} | LICENSE PLATE"
         )
+        divider = "-" * len(header)
 
-        with open(self.log_file, "a") as file:
-            if write_header:
-                header = (
-                    f"{'ENTRY TIME':<20} | {'EXIT TIME':<20} | "
-                    f"{'FEE':<5} | {'BAY':<6} | {'MODEL':<16} | LICENSE PLATE"
-                )
-                divider = "-" * len(header)
-                file.write(header + "\n" + divider + "\n")
-
+        with open(self.log_file, "w") as file:
+            file.write(header + "\n" + divider + "\n")
             for plate, data in self.car_log_data.items():
                 entry, exit_time, fee, bay, model = data
-                if exit_time:
-                    line = (
-                        f"{entry:<20} | {exit_time:<20} | {fee:<5} | "
-                        f"{bay:<6} | {model:<16} | {plate}"
-                    )
-                    file.write(line + "\n")
-
-            file.flush()
-            os.fsync(file.fileno())
-
-        # Keep only active (not-yet-exited) car entries in memory
-        self.car_log_data = {
-            k: v for k, v in self.car_log_data.items() if not v[1]
-        }
+                line = (
+                    f"{entry:<20} | {exit_time:<20} | {fee:<5} | "
+                    f"{bay:<6} | {model:<16} | {plate}"
+                )
+                file.write(line + "\n")

@@ -7,9 +7,6 @@ Simulates a smart carpark system using entry and exit sensors,
 and displays the current carpark status and temperature.
 """
 
-# main.py
-# Simulates a smart carpark system using config file and sensors
-
 from smartpark.models import Car, Carpark
 from smartpark.sensors import EntrySensor, ExitSensor
 from smartpark.display import Display
@@ -20,7 +17,7 @@ import time
 
 def main():
     # Load configuration from config.json
-    config = parse_config("config.json")  # or simply parse_config()
+    config = parse_config("config.json")
     location = config.get('location', 'Unnamed Carpark')
     total_spaces = config.get('total_spaces', 5)
 
@@ -33,25 +30,42 @@ def main():
     exit_sensor = ExitSensor()
     display = Display()
 
-    # Create car objects
-    car1 = Car("ABC123", "Toyota Corolla")
-    car2 = Car("XYZ789", "Honda Civic")
+     # Define 5 real car objects
+    cars = [
+        Car("ABC123", "Toyota Corolla"),
+        Car("XYZ789", "Honda Civic"),
+        Car("DEF456", "Hyundai Tucson"),
+        Car("GHI321", "Mazda CX-5"),
+        Car("JKL999", "Ford Focus")
+    ]
 
-    # Car 1 enters
-    entry_sensor.detect(car1, carpark)
+    # Simulate each car entering
+    for car in cars:
+        entry_sensor.detect(car, carpark)
+        display.show_driver_display(carpark)
+        display.show_admin_monitor(carpark)
+        time.sleep(1)
+
+    # Simulate 3 cars exiting
+    for plate in ["ABC123", "DEF456", "JKL999"]:
+        exit_sensor.detect(plate, carpark)
+        display.show_admin_monitor(carpark)
+        time.sleep(1)
+
+
+# Simulate overflow (attempt to enter more cars than capacity)
+    print("\n--- Overflow Simulation ---")
+    for i in range(total_spaces):
+        plate = f"DUMMY{i:03}"
+        model = f"OverflowCar{i+1}"
+        car = Car(plate, model)
+        entry_sensor.detect(car, carpark)
+
+    # One more car beyond full capacity
+    overflow_car = Car("OVER999", "Overflow Max")
+    entry_sensor.detect(overflow_car, carpark)
+
     display.show_driver_display(carpark)
-    display.show_admin_monitor(carpark)
-
-    # Car 2 enters
-    entry_sensor.detect(car2, carpark)
-    display.show_driver_display(carpark)
-    display.show_admin_monitor(carpark)
-
-    # Simulate short parking duration
-    time.sleep(2)
-
-    # Car 1 exits
-    exit_sensor.detect("ABC123", carpark)
     display.show_admin_monitor(carpark)
 
 
