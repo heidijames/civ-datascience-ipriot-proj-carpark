@@ -10,14 +10,19 @@ and displays the current carpark status and temperature.
 from smartpark.models import Car, Carpark
 from smartpark.sensors import EntrySensor, ExitSensor
 from smartpark.display import Display
-from config_parser import parse_config
 from datetime import datetime
 import time
+import os
+from config_parser import parse_config
 
+# Correct way to resolve config path once, outside main
+current_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(current_dir, "config.json")
 
 def main():
-    # Load configuration from config.json
-    config = parse_config("config.json")
+    # Use the resolved absolute path
+    config = parse_config(config_path)
+
     location = config.get('location', 'Unnamed Carpark')
     total_spaces = config.get('total_spaces', 5)
 
@@ -30,7 +35,7 @@ def main():
     exit_sensor = ExitSensor()
     display = Display()
 
-     # Define 5 real car objects
+    # Define 5 real car objects
     cars = [
         Car("ABC123", "Toyota Corolla"),
         Car("XYZ789", "Honda Civic"),
@@ -52,8 +57,7 @@ def main():
         display.show_admin_monitor(carpark)
         time.sleep(1)
 
-
-# Simulate overflow (attempt to enter more cars than capacity)
+    # Simulate overflow (attempt to enter more cars than capacity)
     print("\n--- Overflow Simulation ---")
     for i in range(total_spaces):
         plate = f"DUMMY{i:03}"
