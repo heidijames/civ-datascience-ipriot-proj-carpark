@@ -120,3 +120,113 @@ pip install -e .
 ```
 
 This command installs the project in editable mode, which means any changes you make to the source code will be immediately reflected in the installed module.
+
+
+
+Project Context
+This project was developed in response to a simulated brief from the City of Moondalup’s Department of Transport. As a junior software innovation engineer, the task was to create a modular, object-oriented system to manage public parking spaces without boom gates. The solution had to support real-time carpark monitoring, configuration management, logging, and testing. Agile-inspired practices—such as rapid iteration, clear user-oriented features, and minimal documentation—guided the development process.
+
+The system needed to:
+
+    Monitor and display available parking bays in real time
+    Record car entry and exit with timestamps
+    Support modular, maintainable code using object-oriented principles
+    Read configurations from an external file
+    Generate logs in a structured format
+    Include unit tests for key functionality
+
+
+Features
+
+    Modular code using Object-Oriented Programming (OOP)
+    Entry and Exit sensors with automatic bay assignment
+    Driver Display: shows current available bays and weather
+    Admin Monitor: displays all parked cars and bay allocations
+    Temperature display using simulated or placeholder weather
+    Real-time fee calculation based on parking duration
+    Configuration via external config.json file
+    Logging of car activity to log.txt with timestamp, fee, and bay
+    Two simulations: normal and full carpark
+    Unit tests for Carpark and Display classes
+
+
+Development followed simplified agile practices with an emphasis on iteration, user-focused output, and minimal but purposeful documentation.
+
+The system uses a config.json file to set up key parameters such as:
+
+{
+  "location": "Moondalup City Square Parking",
+  "total_spaces": 75
+}
+
+This makes it easy to modify the simulation for different carpark sites or capacities without changing the source code. The config is parsed using a custom config_parser.py module.
+
+How to Run
+Ensure you have Python 3.10 or later installed.
+
+1. Install Required Packages
+   (If using the placeholder weather script, no extra packages are needed. If using real API integration, run:)
+
+```bash
+    pip install requests
+```
+    
+2. Run the main simulation
+   From your project folder:  
+
+```bash    
+    python main.py
+```    
+
+3. This will simulate real-time activity including car entries, exits, available bays, driver display, admin monitor, and temperature (placeholder or real).
+
+
+Testing
+
+Unit tests are located in the tests/ folder. To run all tests:
+
+```bash
+    python -m unittest discover tests
+```
+
+
+4. Run alternate simulations (optional)
+To explore additional behavior like a full carpark scenario:
+
+```bash
+    python test_simulations.py
+```
+
+5. Folder Structure
+
+📂 civ-datascience-ipriot-proj-carpark  # Main project directory
+├── 📂 Project Docs        # Documentation and supporting files
+│   ├── LICENSE            # License file
+├── 📂 docs                # Additional documentation and guidelines
+├── 📂 smartpark           # Core system modules for parking management
+│   ├── __init__.py        # Initializes the smartpark module
+│   ├── display.py         # Handles driver and admin display functions
+│   ├── models.py          # Defines data structures for parking system components
+│   ├── sensors.py         # Manages car entry and exit detection
+│   ├── weather.py         # Processes simulated or real weather data
+├── 📂 tests               # Unit tests for validating functionality
+│   ├── __init__.py        # Initializes the tests module
+│   ├── test_carpark.py    # Tests for the Carpark class
+│   ├── test_config.py     # Validates configuration handling
+│   ├── test_display.py    # Ensures proper functionality of the Display module
+├── 📂 __pycache__         # Compiled Python bytecode for optimization
+├── .gitignore             # Specifies files Git should ignore
+├── .gitattributes         # Defines Git attributes and file handling rules
+├── README.md              # Project overview and instructions 
+├── config.json            # Defines carpark settings (location, capacity, etc.)
+├── config_parser.py       # Parses configuration data
+├── log.txt                # Stores car activity logs with timestamps and fees
+├── main.py                # Runs the carpark simulation
+├── test_simulations.py    # Simulates various carpark scenarios
+├── weather.txt            # Stores weather data output
+
+
+6. GitHub Repository:
+https://github.com/heidijames/civ-datascience-ipriot-proj-carpark
+
+
